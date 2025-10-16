@@ -46,6 +46,15 @@ public class UserServiceImpl implements UserService{
         return userRepository.findById(id);
     }
 
+    @Override
+    @Transactional
+    public User createUser(User user) {
+        List<Role> roles = setUserRoles(user);
+        user.setRoles(roles);
+        user.setPassword(user.getPassword());
+        return userRepository.save(user);
+    }
+
     private List<Role> setUserRoles(IUser user) {
         List<Role> roles = new ArrayList<>();
         Optional<Role> optionalRole = roleRepository.findByName("ROLE_USER");

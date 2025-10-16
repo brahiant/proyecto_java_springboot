@@ -30,6 +30,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Entity
 @Table(name = "users")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User implements IUser{
 
 
@@ -56,6 +57,7 @@ public class User implements IUser{
     private String email;
 
     @NotEmpty
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password;
 
     @Transient
@@ -67,13 +69,9 @@ public class User implements IUser{
         return admin;
     }
 
-    // Esta anotación evita problemas de serialización JSON con Hibernate
-    // Ignora propiedades técnicas de Hibernate que no queremos mostrar en JSON
-    @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-    
     // Define una relación muchos-a-muchos: Un usuario puede tener varios roles
     // y un rol puede pertenecer a varios usuarios
-    @ManyToMany(fetch = FetchType.LAZY) // LAZY = Los roles se cargan solo cuando se necesitan (optimización)
+    @ManyToMany(fetch = FetchType.EAGER) // EAGER = Los roles se cargan inmediatamente con el usuario
     
     // Configura la tabla intermedia que conecta usuarios con roles
     @JoinTable(

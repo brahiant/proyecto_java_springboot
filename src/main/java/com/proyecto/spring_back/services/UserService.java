@@ -16,5 +16,6 @@ public interface UserService {
     List<User> getAllUsers();
     Page<User> getAllUsers(Pageable pageable);
     Optional<User> getUserById(Long id);
+    User createUser(User user);
 
 }
