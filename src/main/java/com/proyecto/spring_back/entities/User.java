@@ -62,6 +62,11 @@ public class User implements IUser{
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private boolean admin;
 
+    @Override
+    public boolean isAdmin() {
+        return admin;
+    }
+
     // Esta anotación evita problemas de serialización JSON con Hibernate
     // Ignora propiedades técnicas de Hibernate que no queremos mostrar en JSON
     @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})

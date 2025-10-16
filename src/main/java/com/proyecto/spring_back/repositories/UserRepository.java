@@ -1,4 +1,4 @@
-package com.proyecto.spring_back.Repositories;
+package com.proyecto.spring_back.repositories;
 
 import org.springframework.stereotype.Repository;
 
