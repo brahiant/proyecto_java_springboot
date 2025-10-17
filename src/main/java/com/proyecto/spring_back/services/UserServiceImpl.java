@@ -18,6 +18,7 @@ import com.proyecto.spring_back.repositories.UserRepository;
 
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.proyecto.spring_back.models.UserRequest;
 
 @Service
 public class UserServiceImpl implements UserService{
@@ -53,6 +54,29 @@ public class UserServiceImpl implements UserService{
         user.setRoles(roles);
         user.setPassword(user.getPassword());
         return userRepository.save(user);
+    }
+
+    @Override
+    @Transactional
+    public Optional<User> updateUser(UserRequest userRequest, Long id) {
+        Optional<User> existingUser = getUserById(id);
+        if (existingUser.isPresent()) {
+            User userToUpdate = existingUser.get();
+            userToUpdate.setName(userRequest.getName());
+            userToUpdate.setLastname(userRequest.getLastname());
+            userToUpdate.setUsername(userRequest.getUsername());
+            userToUpdate.setEmail(userRequest.getEmail());  
+            List<Role> roles = setUserRoles(userRequest);
+            userToUpdate.setRoles(roles);
+            return Optional.of(userRepository.save(userToUpdate));
+        }
+        return Optional.empty();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 
     private List<Role> setUserRoles(IUser user) {
