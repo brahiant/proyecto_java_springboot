@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.proyecto.spring_back.entities.User;
 import com.proyecto.spring_back.models.UserRequest;
+import com.proyecto.spring_back.models.UserSaveRequest;
 
 @Service
 public interface UserService {
@@ -17,7 +18,7 @@ public interface UserService {
     List<User> getAllUsers();
     Page<User> getAllUsers(Pageable pageable);
     Optional<User> getUserById(Long id);
-    User createUser(User user);
+    User createUser(UserSaveRequest userSaveRequest);
     Optional<User> updateUser(UserRequest userRequest, Long id);
     void deleteById(Long id);
 

@@ -68,6 +68,8 @@ public class SpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         return http.authorizeHttpRequests(authz -> authz
+                // Rutas de documentación OpenAPI/Swagger públicas
+                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
                 // Endpoints públicos - accesibles sin autenticación
                 .requestMatchers(HttpMethod.GET, "/api/users", "/api/users/page/{page}").permitAll()
                 // Endpoints que requieren rol USER o ADMIN

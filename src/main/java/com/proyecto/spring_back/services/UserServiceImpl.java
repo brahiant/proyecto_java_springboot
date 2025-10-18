@@ -16,11 +16,13 @@ import com.proyecto.spring_back.entities.Role;
 import com.proyecto.spring_back.models.IUser;
 import com.proyecto.spring_back.repositories.RoleRepository;
 import com.proyecto.spring_back.repositories.UserRepository;
+import com.proyecto.spring_back.mapper.UserSaveRequestMapper;
+import com.proyecto.spring_back.mapper.UserRequestMapper;
 
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.proyecto.spring_back.models.UserRequest;
-
+import com.proyecto.spring_back.models.UserSaveRequest;
 @Service
 public class UserServiceImpl implements UserService{
 
@@ -32,6 +34,12 @@ public class UserServiceImpl implements UserService{
 
     @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @Autowired
+    private UserSaveRequestMapper userSaveRequestMapper;
+
+    @Autowired
+    private UserRequestMapper userRequestMapper;
 
     @Override
     @Transactional(readOnly = true)
@@ -53,10 +61,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public User createUser(User user) {
-        List<Role> roles = setUserRoles(user);
+    public User createUser(UserSaveRequest userSaveRequest) {
+        List<Role> roles = setUserRoles(userSaveRequest);
+        User user = userSaveRequestMapper.toUser(userSaveRequest);
         user.setRoles(roles);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(userSaveRequest.getPassword()));
         return userRepository.save(user);
     }
 
@@ -66,10 +75,8 @@ public class UserServiceImpl implements UserService{
         Optional<User> existingUser = getUserById(id);
         if (existingUser.isPresent()) {
             User userToUpdate = existingUser.get();
-            userToUpdate.setName(userRequest.getName());
-            userToUpdate.setLastname(userRequest.getLastname());
-            userToUpdate.setUsername(userRequest.getUsername());
-            userToUpdate.setEmail(userRequest.getEmail());  
+            // Actualización parcial con MapStruct (nulos ignorados, campos sensibles protegidos)
+            userRequestMapper.updateUserFromRequest(userRequest, userToUpdate);
             List<Role> roles = setUserRoles(userRequest);
             userToUpdate.setRoles(roles);
             return Optional.of(userRepository.save(userToUpdate));
