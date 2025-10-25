@@ -96,6 +96,12 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- Base de datos en memoria para pruebas -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
 		<!-- Spring Security Test - Comentado temporalmente -->
 		<!--
 		<dependency>
